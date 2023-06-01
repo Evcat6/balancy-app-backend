@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
