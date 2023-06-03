@@ -58,6 +58,26 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Lint
+
+```bash
+# file system linter
+$ npm run lint:fs
+
+# JS/TS linter
+$ npm run lint:js
+
+# types linter
+$ npm run lint:type
+
+# editor linter
+$ npm run lint:editor
+
+# prettify linter
+$ npm run lint:format
+```
+
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
