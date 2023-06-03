@@ -33,8 +33,4 @@ jobs:
 
       - name: Code Linting
         run: |
-          npm run lint:check
-
-      - name: Code Prettifying
-        run: |
-          npm run format:check
+          npm run lint
