@@ -1,24 +1,30 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role, Roles } from 'src/common';
 
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create() {
-    return this.usersService.create();
-  }
-
   @Get()
-  findAll() {
+  getAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  getOne(@Param('id') id: string) {
+    return this.usersService.findById(+id);
   }
 
   @Patch(':id')
@@ -27,7 +33,14 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Roles(Role.Admin)
+  softDelete(@Param('id') id: string) {
+    return this.usersService.softDelete(+id);
+  }
+
+  @Post(':id/restore')
+  @Roles(Role.Admin)
+  restoreUser(@Param('id') id: number) {
+    return this.usersService.restore(id);
   }
 }
