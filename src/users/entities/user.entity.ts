@@ -34,6 +34,9 @@ export class User {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
+  @Column({ nullable: true })
+  image: string;
+
   constructor(user?: CreateUserDto) {
     if (!user) return;
     this.email = user.email;

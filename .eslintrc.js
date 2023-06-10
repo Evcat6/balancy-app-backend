@@ -26,7 +26,6 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     'import/no-unresolved': 'off',
-    'import/no-default-export': 'error',
     'no-console': 'warn',
   },
 };
