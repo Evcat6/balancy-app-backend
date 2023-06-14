@@ -85,7 +85,7 @@ This guide provides instructions on how to use Git effectively for your team's b
      - `test:` for adding or modifying tests
      - `chore:` for general maintenance or miscellaneous tasks
 
-   Example: `feature: Add user authentication feature`
+   Example: `feature: add user authentication feature`
 
 4. **Be consistent**:
    - Follow the same naming convention throughout the project.
