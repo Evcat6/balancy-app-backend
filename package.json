@@ -39,12 +39,12 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "joi": "^17.9.2",
-    "mysql2": "^3.3.5",
     "nestjs-cloudinary": "^1.0.12",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "typeorm": "^0.3.16"
