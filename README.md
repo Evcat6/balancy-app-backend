@@ -117,6 +117,3 @@ This guide provides instructions on how to use Git effectively for your team's b
 4. **Be consistent**:
    - Follow the same naming convention throughout the project.
 
-Remember, effective use of Git promotes collaboration, coordination, and productivity within your team. Consistency in naming conventions will ensure a smooth development process.
-
-Feel free to customize these guidelines to fit your team's specific needs and workflow.
