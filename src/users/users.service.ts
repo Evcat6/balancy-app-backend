@@ -89,4 +89,17 @@ export class UsersService {
     this.usersRepository.update(userId, { image: secure_url });
     return secure_url;
   }
+
+  async findOrCreateFromGoogle({ email, username, picture }) {
+    let user = await this.usersRepository.findOneBy({ email });
+    if (!user) {
+      user = await this.usersRepository.save({
+        email,
+        username,
+        image: picture,
+        password: null,
+      });
+    }
+    return user;
+  }
 }

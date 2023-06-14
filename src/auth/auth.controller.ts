@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/common';
+import { Public, User } from 'src/common';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -20,13 +21,29 @@ export class AuthController {
   @Public()
   @ApiBody({ type: LoginUserDto })
   @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@User() user) {
+    return this.authService.login(user);
   }
 
   @Public()
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  googleAuth() {
+    // initiates the Google OAuth2 login flow
+  }
+
+  @Public()
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@User() user) {
+    // Here you can handle what to do after a successful login
+    // return the user info or send a JWT token and redirect etc
+    return this.authService.login(user);
   }
 }

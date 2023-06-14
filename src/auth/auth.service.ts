@@ -26,4 +26,12 @@ export class AuthService {
       accessToken: this.jwtService.sign(payload),
     };
   }
+
+  findOrCreateFromGoogle({ email, username, picture }) {
+    return this.usersService.findOrCreateFromGoogle({
+      email,
+      username,
+      picture,
+    });
+  }
 }
