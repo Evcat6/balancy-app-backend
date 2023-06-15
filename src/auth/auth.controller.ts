@@ -7,6 +7,7 @@ import { UsersService } from 'src/users/users.service';
 
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
@@ -45,5 +46,11 @@ export class AuthController {
     // Here you can handle what to do after a successful login
     // return the user info or send a JWT token and redirect etc
     return this.authService.login(user);
+  }
+
+  @Get('current')
+  @UseGuards(JwtAuthGuard)
+  async loadUser(@User() user) {
+    return await this.usersService.findById(user.id);
   }
 }
