@@ -48,7 +48,7 @@ export class AuthController {
     return this.authService.login(user);
   }
 
-  @Get('current')
+  @Get('me')
   @UseGuards(JwtAuthGuard)
   async loadUser(@User() user) {
     return await this.usersService.findById(user.id);
