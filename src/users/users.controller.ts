@@ -54,6 +54,12 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  softDeleteMe(@User('id') id) {
+    return this.usersService.softDelete(id);
+  }
+
   @Delete(':id')
   @Roles(Role.Admin)
   softDelete(@Param('id', new ParseIntPipe()) id: number) {
