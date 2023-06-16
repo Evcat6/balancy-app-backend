@@ -38,7 +38,7 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
-  private async find(payload: unknown) {
+  private async findOneBy(payload: unknown) {
     const user = await this.usersRepository.findOneBy(payload);
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
@@ -47,12 +47,12 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    const user = await this.find({ id });
+    const user = await this.findOneBy({ id });
     return instanceToPlain(user);
   }
 
   findByEmail(email: string, isActive = true) {
-    return this.find({ email, isActive });
+    return this.findOneBy({ email, isActive });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
