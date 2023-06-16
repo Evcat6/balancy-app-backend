@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Public, User } from 'src/common';
@@ -46,6 +46,12 @@ export class AuthController {
     // Here you can handle what to do after a successful login
     // return the user info or send a JWT token and redirect etc
     return this.authService.login(user);
+  }
+
+  @Public()
+  @Get('verify-email')
+  verifyEmail(@Query('token') token: string) {
+    return this.usersService.verifyEmail(token);
   }
 
   @Get('me')

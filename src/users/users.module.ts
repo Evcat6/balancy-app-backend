@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from 'nestjs-cloudinary';
+import { EmailService } from 'src/common';
 
 import { User } from './entities/user.entity';
 import { UsersController } from './users.controller';
@@ -22,7 +23,7 @@ import { UsersService } from './users.service';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [EmailService, UsersService],
   exports: [UsersService],
 })
 export class UsersModule {}
