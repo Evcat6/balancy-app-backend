@@ -27,5 +27,9 @@ module.exports = {
     'simple-import-sort/exports': 'error',
     'import/no-unresolved': 'off',
     'no-console': 'warn',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { argsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
   },
 };
