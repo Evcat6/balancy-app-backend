@@ -24,7 +24,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
 
     const user = new User(createUserDto);
@@ -38,13 +38,21 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
+  private async findOneBy(payload: unknown) {
+    const user = await this.usersRepository.findOneBy(payload);
+    if (!user) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
   async findById(id: number) {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.findOneBy({ id });
     return instanceToPlain(user);
   }
 
   findByEmail(email: string, isActive = true) {
-    return this.usersRepository.findOneBy({ email, isActive });
+    return this.findOneBy({ email, isActive });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
