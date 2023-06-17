@@ -27,15 +27,22 @@ export class User {
   @Column({ nullable: false, default: Role.User })
   role: string;
 
+  @Column({ nullable: true })
+  image: string;
+
+  @Column({ default: false })
+  emailVerified: boolean;
+
+  @Exclude()
+  @Column({ nullable: true })
+  emailVerificationToken: string;
+
   @Column({ default: true })
   isActive: boolean;
 
   @Exclude()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
-
-  @Column({ nullable: true })
-  image: string;
 
   constructor(user?: CreateUserDto) {
     if (!user) return;

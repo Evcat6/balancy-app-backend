@@ -2,7 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { instanceToInstance, instanceToPlain } from 'class-transformer';
+import { randomBytes } from 'crypto';
 import { CloudinaryService } from 'nestjs-cloudinary';
+import { EmailService } from 'src/common';
 import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,7 +16,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private readonly cloudinaryService: CloudinaryService,
+    private emailService: EmailService,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -28,8 +31,15 @@ export class UsersService {
     }
 
     const user = new User(createUserDto);
-    user.password = await bcrypt.hash(createUserDto.password, 10); // Hash the password
+    user.password = await bcrypt.hash(createUserDto.password, 10);
+    user.emailVerificationToken = await randomBytes(16).toString('hex');
     const createdUser = await this.usersRepository.save(user);
+
+    this.emailService.sendEmailVerification(
+      createdUser.email,
+      createdUser.emailVerificationToken,
+    );
+
     return instanceToInstance(createdUser);
   }
 
@@ -38,7 +48,7 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
-  private async findOneBy(payload: unknown) {
+  private async findUserBy(payload: Partial<User>) {
     const user = await this.usersRepository.findOneBy(payload);
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
@@ -47,12 +57,46 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    const user = await this.findOneBy({ id });
+    const user = await this.findUserBy({ id });
     return instanceToPlain(user);
   }
 
   findByEmail(email: string, isActive = true) {
-    return this.findOneBy({ email, isActive });
+    return this.findUserBy({ email, isActive });
+  }
+
+  async verifyEmail(emailVerificationToken: string) {
+    const user = await this.usersRepository.findOneBy({
+      emailVerificationToken,
+    });
+
+    if (!user) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = null;
+    const updatedUser = await this.usersRepository.save(user);
+
+    return instanceToPlain(updatedUser);
+  }
+
+  async resendEmailVerification(id: number) {
+    const user = await this.findUserBy({ id });
+
+    if (user.emailVerified) {
+      throw new HttpException('Email already verified', HttpStatus.CONFLICT);
+    }
+
+    user.emailVerificationToken = await randomBytes(16).toString('hex');
+    const updatedUser = await this.usersRepository.save(user);
+
+    this.emailService.sendEmailVerification(
+      updatedUser.email,
+      updatedUser.emailVerificationToken,
+    );
+
+    return instanceToPlain(updatedUser);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -106,6 +150,7 @@ export class UsersService {
         username,
         image: picture,
         password: null,
+        emailVerified: true,
       });
     }
     return user;
