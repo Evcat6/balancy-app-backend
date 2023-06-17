@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class EmailService {
+  private logger = new Logger('EmailService');
+
   async sendEmailVerification(email: string, token: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -24,9 +26,9 @@ export class EmailService {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+        this.logger.error(error);
       } else {
-        console.log(`Email sent to ${email}: ` + info.response);
+        this.logger.log(`Email sent to ${email}: ` + info.response);
       }
     });
   }

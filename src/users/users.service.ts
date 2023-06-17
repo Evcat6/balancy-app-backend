@@ -48,7 +48,7 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
-  private async findOneBy(payload: unknown) {
+  private async findUserBy(payload: Partial<User>) {
     const user = await this.usersRepository.findOneBy(payload);
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
@@ -57,12 +57,12 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    const user = await this.findOneBy({ id });
+    const user = await this.findUserBy({ id });
     return instanceToPlain(user);
   }
 
   findByEmail(email: string, isActive = true) {
-    return this.findOneBy({ email, isActive });
+    return this.findUserBy({ email, isActive });
   }
 
   async verifyEmail(emailVerificationToken: string) {
@@ -77,6 +77,24 @@ export class UsersService {
     user.emailVerified = true;
     user.emailVerificationToken = null;
     const updatedUser = await this.usersRepository.save(user);
+
+    return instanceToPlain(updatedUser);
+  }
+
+  async resendEmailVerification(id: number) {
+    const user = await this.findUserBy({ id });
+
+    if (user.emailVerified) {
+      throw new HttpException('Email already verified', HttpStatus.CONFLICT);
+    }
+
+    user.emailVerificationToken = await randomBytes(16).toString('hex');
+    const updatedUser = await this.usersRepository.save(user);
+
+    this.emailService.sendEmailVerification(
+      updatedUser.email,
+      updatedUser.emailVerificationToken,
+    );
 
     return instanceToPlain(updatedUser);
   }

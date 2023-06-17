@@ -54,6 +54,11 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Post('resend-email-verification')
+  resendEmailVerification(@User('id') userId: number) {
+    return this.usersService.resendEmailVerification(userId);
+  }
+
   @Delete('me')
   @UseGuards(JwtAuthGuard)
   softDeleteMe(@User('id') id) {
