@@ -51,4 +51,3 @@ export class TaskEntity {
   // @ManyToOne(() => User, (user) => user.tasks)
   // username: User;
 }
-
