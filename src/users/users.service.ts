@@ -9,18 +9,18 @@ import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
     private emailService: EmailService,
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
       withDeleted: true,
@@ -30,7 +30,7 @@ export class UsersService {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
 
-    const user = new User(createUserDto);
+    const user = new UserEntity(createUserDto);
     user.password = await bcrypt.hash(createUserDto.password, 10);
     user.emailVerificationToken = await randomBytes(16).toString('hex');
     const createdUser = await this.usersRepository.save(user);
@@ -48,7 +48,7 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
-  private async findUserBy(payload: Partial<User>) {
+  private async findUserBy(payload: Partial<any>) {
     const user = await this.usersRepository.findOneBy(payload);
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);

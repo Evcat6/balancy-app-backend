@@ -1,16 +1,18 @@
 import { Exclude } from 'class-transformer';
 import { Role } from 'src/common';
+import { TaskEntity } from 'src/tasks/entities/task.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { CreateUserDto } from '../dto/create-user.dto';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -51,4 +53,7 @@ export class User {
       .split('@')[0]
       .replace(/^\w/, (c) => c.toUpperCase());
   }
+
+  @OneToMany(() => TaskEntity, (task) => task.username)
+  tasks: TaskEntity[];
 }

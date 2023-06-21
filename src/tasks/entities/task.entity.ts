@@ -1,5 +1,6 @@
 // import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 enum Type {
   Task = 'task',
@@ -48,6 +49,6 @@ export class TaskEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   completeDate: Date;
 
-  // @ManyToOne(() => User, (user) => user.tasks)
-  // username: User;
+  @ManyToOne(() => UserEntity, (user) => user.tasks)
+  username: UserEntity;
 }

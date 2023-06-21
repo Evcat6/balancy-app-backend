@@ -4,13 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from 'nestjs-cloudinary';
 import { EmailService } from 'src/common';
 
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([UserEntity]),
     CloudinaryModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -9,7 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/common';
+import { UserEntity } from 'src/users/entities/user.entity';
 
+import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -19,8 +23,11 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create() {
-    return this.tasksService.create();
+  async createTask(
+    @User() currentUser: UserEntity,
+    @Body('task') createTaskDto: CreateTaskDto,
+  ): Promise<any> {
+    return this.tasksService.createTask(currentUser, createTaskDto);
   }
 
   @Get()
