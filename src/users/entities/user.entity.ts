@@ -37,6 +37,10 @@ export class User {
   @Column({ nullable: true })
   emailVerificationToken: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
   @Column({ default: true })
   isActive: boolean;
 
