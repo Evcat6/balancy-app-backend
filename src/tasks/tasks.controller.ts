@@ -15,6 +15,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
+import { TaskResponseInterface } from './tipes/tipesResponse.interface';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -26,8 +27,9 @@ export class TasksController {
   async createTask(
     @User() currentUser: UserEntity,
     @Body('task') createTaskDto: CreateTaskDto,
-  ): Promise<any> {
-    return this.tasksService.createTask(currentUser, createTaskDto);
+  ): Promise<TaskResponseInterface> {
+    const task = await this.tasksService.createTask(currentUser, createTaskDto);
+    return this.tasksService.buildTaskResponse(task);
   }
 
   @Get()

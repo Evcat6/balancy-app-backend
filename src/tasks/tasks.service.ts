@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskEntity } from './entities/task.entity';
+import { TaskResponseInterface } from './tipes/tipesResponse.interface';
 
 @Injectable()
 export class TasksService {
@@ -36,5 +37,9 @@ export class TasksService {
 
   remove(id: number) {
     return `This action removes a #${id} task`;
+  }
+
+  buildTaskResponse(task: TaskEntity): TaskResponseInterface {
+    return { task };
   }
 }
