@@ -2,9 +2,11 @@ import { Exclude } from 'class-transformer';
 import { Role } from 'src/common';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -37,8 +39,18 @@ export class User {
   @Column({ nullable: true })
   emailVerificationToken: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @Exclude()
   @DeleteDateColumn({ nullable: true })

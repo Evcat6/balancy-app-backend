@@ -6,7 +6,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
 import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/login-user.dto';
+import { ChangePasswordDto, LoginUserDto } from './dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
@@ -58,5 +58,18 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async loadUser(@User() user) {
     return await this.usersService.findById(user.id);
+  }
+
+  @Public()
+  @Post('reset-password')
+  requestPasswordReset(@Body('email') email: string) {
+    return this.usersService.resetPassword(email);
+  }
+
+  @Public()
+  @Post('set-password')
+  async verifyPasswordReset(@Body() body: ChangePasswordDto) {
+    const user = await this.usersService.setPassword(body.token, body.password);
+    return this.authService.login(user);
   }
 }
