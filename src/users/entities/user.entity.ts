@@ -2,10 +2,12 @@ import { Exclude } from 'class-transformer';
 import { Role } from 'src/common';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { SubCategory } from '@/sub-categories/entities/sub-category.entity';
@@ -46,6 +48,12 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @Exclude()
   @DeleteDateColumn({ nullable: true })
