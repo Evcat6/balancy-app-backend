@@ -4,8 +4,11 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { SubCategory } from '@/sub-categories/entities/sub-category.entity';
 
 import { CreateUserDto } from '../dto/create-user.dto';
 
@@ -47,6 +50,9 @@ export class User {
   @Exclude()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.user)
+  subCategories: SubCategory[];
 
   constructor(user?: CreateUserDto) {
     if (!user) return;
