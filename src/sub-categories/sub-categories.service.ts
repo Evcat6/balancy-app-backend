@@ -44,7 +44,7 @@ export class SubCategoriesService {
     return instanceToPlain(subCategory);
   }
 
-  private async isCategoryExist(user: User, categoryName: string) {
+  private async exist(user: User, categoryName: string) {
     const category = await this.subcategoryRepository.findOneBy({
       user,
       name: categoryName,
@@ -54,7 +54,7 @@ export class SubCategoriesService {
 
   async create(userId: number, payload: CreateSubCategoryDto) {
     const user = await this.findUserById(userId);
-    const isCategoryExist = await this.isCategoryExist(user, payload.name);
+    const isCategoryExist = await this.exist(user, payload.name);
     if (isCategoryExist) {
       throw new HttpException('Category already exists', HttpStatus.CONFLICT);
     }
