@@ -1,5 +1,4 @@
-// import { User } from 'src/users/entities/user.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 enum Type {
@@ -7,7 +6,7 @@ enum Type {
   Event = 'event',
 }
 
-enum Prioryty {
+enum Priority {
   High = 'high',
   Medium = 'medium',
   Low = 'low',
@@ -18,7 +17,7 @@ enum Prioryty {
 }
 
 @Entity({ name: 'tasks' })
-export class TaskEntity {
+export class Task {
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -37,8 +36,8 @@ export class TaskEntity {
   @Column()
   subcategory: string;
 
-  @Column({ type: 'enum', enum: Prioryty, default: Prioryty.Medium })
-  prioryty: Prioryty;
+  @Column({ type: 'enum', enum: Priority, default: Priority.Medium })
+  priority: Priority;
 
   @Column({ default: true })
   pinned: boolean;
@@ -49,6 +48,6 @@ export class TaskEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   completeDate: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.tasks)
-  username: UserEntity;
+  @ManyToOne(() => User, (user) => user.tasks)
+  userId: number;
 }

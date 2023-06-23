@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskEntity } from './entities/task.entity';
-import { TaskResponseInterface } from './types/typesResponse.interface';
+import { Task } from './entities/task.entity';
+import { TaskResponseInterface } from './types/types-response.interface';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(TaskEntity)
-    private readonly taskRepository: Repository<TaskEntity>,
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
   ) {}
   async createTask(
-    currentUser: UserEntity,
+    currentUser: User,
     createTaskDto: CreateTaskDto,
-  ): Promise<TaskEntity> {
-    const task = new TaskEntity();
+  ): Promise<Task> {
+    const task = new Task();
     Object.assign(task, createTaskDto);
-    task.username = currentUser;
+    task.userId = currentUser.id;
     return await this.taskRepository.save(task);
   }
 
@@ -39,12 +39,11 @@ export class TasksService {
     return `This action removes a #${id} task`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
-  async findOne(id: string): Promise<TaskEntity> {
+  async findOne(id: string): Promise<Task> {
     return await this.taskRepository.findOne({ where: { id } });
   }
 
-  buildTaskResponse(task: TaskEntity): TaskResponseInterface {
+  buildTaskResponse(task: Task): TaskResponseInterface {
     return { task };
   }
 }

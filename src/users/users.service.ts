@@ -14,18 +14,18 @@ import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity)
-    private usersRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private emailService: EmailService,
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
       withDeleted: true,
@@ -35,7 +35,7 @@ export class UsersService {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
 
-    const user = new UserEntity(createUserDto);
+    const user = new User(createUserDto);
     user.password = await bcrypt.hash(createUserDto.password, 10);
     user.emailVerificationToken = await randomBytes(16).toString('hex');
     const createdUser = await this.usersRepository.save(user);

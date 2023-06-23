@@ -10,12 +10,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { User } from 'src/common';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User as UserDecorator } from 'src/common';
+import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
-import { TaskResponseInterface } from './types/typesResponse.interface';
+import { TaskResponseInterface } from './types/types-response.interface';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -25,7 +25,7 @@ export class TasksController {
 
   @Post()
   async createTask(
-    @User() currentUser: UserEntity,
+    @UserDecorator() currentUser: User,
     @Body('task') createTaskDto: CreateTaskDto,
   ): Promise<TaskResponseInterface> {
     const task = await this.tasksService.createTask(currentUser, createTaskDto);

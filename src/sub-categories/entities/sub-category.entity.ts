@@ -13,7 +13,7 @@ export class SubCategory {
   name: string;
 
   @ManyToOne(() => User, (subCategory) => subCategory.subCategories)
-  user: User;
+  userId: number;
 
   constructor(payload?: CreateSubCategoryDto) {
     if (!payload) return;

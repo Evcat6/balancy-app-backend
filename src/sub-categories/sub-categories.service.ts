@@ -18,24 +18,14 @@ export class SubCategoriesService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findUserById(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    return user;
-  }
-
   async findAll(userId: number) {
-    const user = await this.findUserById(userId);
-    const subCategories = await this.subcategoryRepository.findBy({ user });
+    const subCategories = await this.subcategoryRepository.findBy({ userId });
     return instanceToPlain(subCategories);
   }
 
   async findById(userId: number, id: number) {
-    const user = await this.findUserById(userId);
     const subCategory = await this.subcategoryRepository.findOneBy({
-      user,
+      userId,
       id,
     });
     if (!subCategory) {
@@ -44,26 +34,25 @@ export class SubCategoriesService {
     return instanceToPlain(subCategory);
   }
 
-  private async exist(user: User, categoryName: string) {
+  private async exist(userId: number, categoryName: string) {
     const category = await this.subcategoryRepository.findOneBy({
-      user,
+      userId,
       name: categoryName,
     });
     return category;
   }
 
   async create(userId: number, payload: CreateSubCategoryDto) {
-    const user = await this.findUserById(userId);
-    const isCategoryExist = await this.exist(user, payload.name);
+    const isCategoryExist = await this.exist(userId, payload.name);
     if (isCategoryExist) {
       throw new HttpException('Category already exists', HttpStatus.CONFLICT);
     }
     const newSubCategory = new SubCategory(payload);
-    newSubCategory.user = user;
+    newSubCategory.userId = userId;
 
     this.subcategoryRepository.save(newSubCategory);
 
-    const { user: subCategoryUser, ...subCategory } = newSubCategory;
+    const { userId: subCategoryUserId, ...subCategory } = newSubCategory;
     return instanceToPlain(subCategory);
   }
 
