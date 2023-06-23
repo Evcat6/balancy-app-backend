@@ -27,9 +27,9 @@ export class TasksService {
     return `This action returns all tasks`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} task`;
+  // }
 
   update(id: number) {
     return `This action updates a #${id} task`;
@@ -37,6 +37,11 @@ export class TasksService {
 
   remove(id: number) {
     return `This action removes a #${id} task`;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
+  async findOne(id: string): Promise<TaskEntity> {
+    return await this.taskRepository.findOne({ where: { id } });
   }
 
   buildTaskResponse(task: TaskEntity): TaskResponseInterface {

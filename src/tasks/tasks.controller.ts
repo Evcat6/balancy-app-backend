@@ -38,8 +38,9 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+  async getTaskById(@Param('id') id: string): Promise<TaskResponseInterface> {
+    const task = await this.tasksService.findOne(id);
+    return this.tasksService.buildTaskResponse(task);
   }
 
   @Patch(':id')

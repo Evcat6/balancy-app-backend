@@ -20,7 +20,7 @@ enum Prioryty {
 @Entity({ name: 'tasks' })
 export class TaskEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column({ type: 'enum', enum: Type, default: Type.Task })
   tipe: Type;
