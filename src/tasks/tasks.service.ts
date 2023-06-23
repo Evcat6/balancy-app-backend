@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskEntity } from './entities/task.entity';
-import { TaskResponseInterface } from './tipes/tipesResponse.interface';
+import { TaskResponseInterface } from './types/typesResponse.interface';
 
 @Injectable()
 export class TasksService {

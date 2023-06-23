@@ -15,7 +15,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
-import { TaskResponseInterface } from './tipes/tipesResponse.interface';
+import { TaskResponseInterface } from './types/typesResponse.interface';
 
 @Controller('tasks')
 @ApiTags('Tasks')
