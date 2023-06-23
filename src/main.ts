@@ -11,17 +11,15 @@ import { logger } from './common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const environment = configService.get<string>('node_env');
 
-  if (environment === 'development') {
-    const docConfig = new DocumentBuilder()
-      .setTitle('Balancyй API')
-      .setDescription('Balancyй API - list of available endpoints')
-      .setVersion('1.0')
-      .build();
-    const document = SwaggerModule.createDocument(app, docConfig);
-    SwaggerModule.setup('api-docs', app, document);
-  }
+  const docConfig = new DocumentBuilder()
+    .setTitle('Balancyй API')
+    .setDescription('Balancyй API - list of available endpoints')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, docConfig);
+  SwaggerModule.setup('api-docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const port = configService.get<number>('port');

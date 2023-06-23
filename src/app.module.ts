@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './common';
 import { configuration, configValidationSchema } from './config';
+import { SubCategoriesModule } from './sub-categories/sub-categories.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -40,6 +41,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     UsersModule,
     TasksModule,
+    SubCategoriesModule,
   ],
   controllers: [AppController],
   providers: [

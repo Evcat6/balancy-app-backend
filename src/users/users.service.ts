@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { instanceToInstance, instanceToPlain } from 'class-transformer';
@@ -79,6 +84,33 @@ export class UsersService {
     const updatedUser = await this.usersRepository.save(user);
 
     return instanceToPlain(updatedUser);
+  }
+
+  async resetPassword(email: string) {
+    const user = await this.findUserBy({ email });
+
+    user.passwordResetToken = await randomBytes(20).toString('hex');
+    const updatedUser = await this.usersRepository.save(user);
+
+    this.emailService.sendPasswordReset(
+      updatedUser.email,
+      updatedUser.passwordResetToken,
+    );
+
+    return true;
+  }
+
+  async setPassword(passwordResetToken: string, password: string) {
+    const user = await this.usersRepository.findOneBy({ passwordResetToken });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.passwordResetToken = null;
+
+    return await this.usersRepository.save(user);
   }
 
   async resendEmailVerification(id: number) {
