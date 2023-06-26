@@ -53,7 +53,7 @@ export class UsersService {
     return instanceToPlain(users);
   }
 
-  private async findUserBy(payload: Partial<User>) {
+  private async findUserBy(payload: Partial<any>) {
     const user = await this.usersRepository.findOneBy(payload);
     if (!user) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);

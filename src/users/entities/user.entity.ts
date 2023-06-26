@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Role } from 'src/common';
+import { Task } from 'src/tasks/entities/task.entity';
 import {
   Column,
   CreateDateColumn,
@@ -59,8 +60,11 @@ export class User {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @OneToMany(() => SubCategory, (subCategory) => subCategory.user)
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.userId)
   subCategories: SubCategory[];
+
+  @OneToMany(() => Task, (task) => task.userId)
+  tasks: Task[];
 
   constructor(user?: CreateUserDto) {
     if (!user) return;
