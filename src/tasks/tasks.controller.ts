@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -9,8 +10,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User as UserDecorator } from 'src/common';
+import { User } from 'src/users/entities/user.entity';
 
+import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
+import { TaskResponseInterface } from './types/types-response.interface';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -19,8 +24,12 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create() {
-    return this.tasksService.create();
+  async createTask(
+    @UserDecorator() currentUser: User,
+    @Body('task') createTaskDto: CreateTaskDto,
+  ): Promise<TaskResponseInterface> {
+    const task = await this.tasksService.createTask(currentUser, createTaskDto);
+    return this.tasksService.buildTaskResponse(task);
   }
 
   @Get()
@@ -29,8 +38,9 @@ export class TasksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+  async getTaskById(@Param('id') id: string): Promise<TaskResponseInterface> {
+    const task = await this.tasksService.findOne(id);
+    return this.tasksService.buildTaskResponse(task);
   }
 
   @Patch(':id')

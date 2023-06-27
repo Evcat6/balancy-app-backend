@@ -1,11 +1,17 @@
 import { Exclude } from 'class-transformer';
 import { Role } from 'src/common';
+import { Task } from 'src/tasks/entities/task.entity';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+
+import { SubCategory } from '@/sub-categories/entities/sub-category.entity';
 
 import { CreateUserDto } from '../dto/create-user.dto';
 
@@ -37,12 +43,28 @@ export class User {
   @Column({ nullable: true })
   emailVerificationToken: string;
 
+  @Exclude()
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @Exclude()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.userId)
+  subCategories: SubCategory[];
+
+  @OneToMany(() => Task, (task) => task.userId)
+  tasks: Task[];
 
   constructor(user?: CreateUserDto) {
     if (!user) return;
